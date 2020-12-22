@@ -40,7 +40,7 @@ def get_homework_statuses(current_timestamp):
         )
         return homework_statuses.json()
     except Exception as e:
-        print(f'Бот столкнулся с ошибкой {e}')
+        print(f'Ошибка у бота {e}')
 
 
 def send_message(message, bot_client):
@@ -49,18 +49,17 @@ def send_message(message, bot_client):
 
 def main():
     bot = telegram.Bot(token=TELEGRAM_TOKEN)
-    current_timestamp = int(time.time())  # начальное значение timestamp
-
+    current_timestamp = int(time.time())  
     while True:
         try:
             new_homework = get_homework_statuses(current_timestamp)
             if new_homework.get('homeworks'):
-                send_message(parse_homework_status(new_homework.get('homeworks')[0]))
-            current_timestamp = new_homework.get('current_date', current_timestamp)  # обновить timestamp
-            time.sleep(300)  # опрашивать раз в пять минут
+                send_message(parse_homework_status(new_homework.get('homeworks')[0]), bot)
+            current_timestamp = new_homework.get('current_date', current_timestamp) 
+            time.sleep(300)  
 
         except Exception as e:
-            print(f'Бот столкнулся с ошибкой: {e}')
+            print(f'Ошибка у бота: {e}')
             time.sleep(5)
 
 
