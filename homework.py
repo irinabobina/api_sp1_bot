@@ -11,11 +11,16 @@ load_dotenv()
 PRAKTIKUM_TOKEN = os.getenv("PRAKTIKUM_TOKEN")
 TELEGRAM_TOKEN = os.getenv('TELEGRAM_TOKEN')
 CHAT_ID = os.getenv('TELEGRAM_CHAT_ID')
-
+URL = 'https://praktikum.yandex.ru'
 
 def parse_homework_status(homework):
-    homework_name = ...
-    if ...
+    homework_name = homework.get('homework_name')
+    if homework_name is None:
+        return homework.get('unknown')
+    status = homework.get('status')
+    if status is None:
+        homework.get('unknown')
+    elif status == 'rejected':
         verdict = 'К сожалению в работе нашлись ошибки.'
     else:
         verdict = 'Ревьюеру всё понравилось, можно приступать к следующему уроку.'
@@ -23,18 +28,27 @@ def parse_homework_status(homework):
 
 
 def get_homework_statuses(current_timestamp):
-    ...
-    homework_statuses = ...
-    return homework_statuses.json()
+    if current_timestamp is None:
+        return int(time.time())
+    headers = {'Authorization': f'0Auth {PRAKTIKUM_TOKEN}'}
+    params = {'from_date': current_timestamp}
+    try:
+        homework_statuses = requests.get(
+            url=URL,
+            headers=headers,
+            params=params
+        )
+        return homework_statuses.json()
+    except Exception as e:
+        print(f'Бот столкнулся с ошибкой {e}')
 
 
 def send_message(message, bot_client):
-    ...
-    return bot_client.send_message(...)
+    return bot_client.send_message(chat_id=CHAT_ID, text=message)
 
 
 def main():
-    # проинициализировать бота здесь
+    bot = telegram.Bot(token=TELEGRAM_TOKEN)
     current_timestamp = int(time.time())  # начальное значение timestamp
 
     while True:
