@@ -31,15 +31,15 @@ def get_homework_statuses(current_timestamp):
         current_timestamp = int(time.time())
     headers = {'Authorization': f'OAuth {PRAKTIKUM_TOKEN}'}
     params = {'from_date': 0}
-    try:
-        homework_statuses = requests.get(
-            url=URL,
-            headers=headers,
-            params=params
-        )
-        return homework_statuses.json()
-    except Exception as e:
-        print(f'Ошибка у бота {e}')
+    #try:
+    homework_statuses = requests.get(
+        url=URL,
+        headers=headers,
+        params=params
+    )
+    return homework_statuses.json()
+    #except Exception as e:
+        #print(f'Ошибка у бота {e}')
 
 
 def send_message(message, bot_client):
