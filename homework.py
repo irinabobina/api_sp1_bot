@@ -28,11 +28,11 @@ def parse_homework_status(homework):
     return f'У вас проверили работу "{homework_name}"!\n\n{verdict}'
 
 
-def get_homework_statuses(current_timestamp):
-    if current_timestamp is None:
+def get_homework_statuses(timestamp):
+    if timestamp is None:
         return int(time.time())
     headers = {'Authorization': f'OAuth {PRAKTIKUM_TOKEN}'}
-    params = {'from_date': current_timestamp}
+    params = {'from_date': timestamp}
     try:
         homework_statuses = requests.get(
             url=URL,
