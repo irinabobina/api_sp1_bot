@@ -9,30 +9,28 @@ from dotenv import load_dotenv
 load_dotenv()
 
 
-PRAKTIKUM_TOKEN = 'AgAAAAAxKf_JAAYckZqsY7LWb03ciCBbXlyHVbo' #os.getenv("PRAKTIKUM_TOKEN")
-TELEGRAM_TOKEN = '1470844282:AAHyF3MMOVyatAC2GXJUD0uvDzkAwkP449k' #os.getenv('TELEGRAM_TOKEN')
-CHAT_ID = '924776606' #os.getenv('TELEGRAM_CHAT_ID')
-URL = 'https://praktikum.yandex.ru/api/user_api/homework_statuses'
+PRAKTIKUM_TOKEN = 'xxx' #os.getenv("PRAKTIKUM_TOKEN")
+TELEGRAM_TOKEN = 'xxx' #os.getenv('TELEGRAM_TOKEN')
+CHAT_ID = 'xxx' #os.getenv('TELEGRAM_CHAT_ID')
+URL = 'https://praktikum.yandex.ru/api/user_api/homework_statuses/'
 
 def parse_homework_status(homework):
     homework_name = homework.get('homework_name')
-    if homework_name is None:
-        return homework.get('unknown')
     status = homework.get('status')
-    if status is None:
-        homework.get('unknown')
+    if homework_name is None or status is None:
+        return 'Что-то пошло не так'
     elif status == 'rejected':
         verdict = 'К сожалению в работе нашлись ошибки.'
-    else:
+    elif status == 'approved':
         verdict = 'Ревьюеру всё понравилось, можно приступать к следующему уроку.'
     return f'У вас проверили работу "{homework_name}"!\n\n{verdict}'
 
 
 def get_homework_statuses(current_timestamp):
     if current_timestamp is None:
-        return int(time.time())
+        current_timestamp = int(time.time())
     headers = {'Authorization': f'OAuth {PRAKTIKUM_TOKEN}'}
-    params = {'from_date': 0}
+    params = {'from_date': current_timestamp}
     try:
         homework_statuses = requests.get(
             url=URL,
@@ -42,6 +40,9 @@ def get_homework_statuses(current_timestamp):
         return homework_statuses.json()
     except Exception as e:
         print(f'Ошибка у бота {e}')
+        # Вот здесь лучше возвращать пустой словарь
+        # Не забывай, что функция возвращает None, если не указать возвращаемое значение явно
+        # Это должно убрать часть ошибок, типа TypeError
 
 
 def send_message(message, bot_client):
