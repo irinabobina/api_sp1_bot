@@ -9,9 +9,9 @@ from dotenv import load_dotenv
 load_dotenv()
 
 
-PRAKTIKUM_TOKEN = 'AgAAAAAxKf_JAAYckZqsY7LWb03ciCBbXlyHVbo'
-TELEGRAM_TOKEN = '1470844282:AAHyF3MMOVyatAC2GXJUD0uvDzkAwkP449k'
-CHAT_ID = '924776606'
+PRAKTIKUM_TOKEN = os.getenv('PRAKTIKUM_TOKEN')
+TELEGRAM_TOKEN = os.getenv('TELEGRAM_TOKEN')
+CHAT_ID = os.getenv('CHAT_ID')
 URL = 'https://praktikum.yandex.ru/api/user_api/homework_statuses/'
 
 def parse_homework_status(homework):
