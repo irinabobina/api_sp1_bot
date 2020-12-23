@@ -16,21 +16,23 @@ URL = 'https://praktikum.yandex.ru/api/user_api/homework_statuses/'
 
 def parse_homework_status(homework):
     homework_name = homework.get('homework_name')
+    if homework_name is None:
+        return homework.get('unknown')
     status = homework.get('status')
-    if homework_name is None or status is None:
-        return 'Что-то пошло не так'
+    if status is None:
+        homework.get('unknown')
     elif status == 'rejected':
         verdict = 'К сожалению в работе нашлись ошибки.'
-    elif status == 'approved':
+    else:
         verdict = 'Ревьюеру всё понравилось, можно приступать к следующему уроку.'
     return f'У вас проверили работу "{homework_name}"!\n\n{verdict}'
 
 
 def get_homework_statuses(current_timestamp):
     if current_timestamp is None:
-        current_timestamp = int(time.time())
+        return int(time.time())
     headers = {'Authorization': f'OAuth {PRAKTIKUM_TOKEN}'}
-    params = {'from_date': current_timestamp}
+    params = {'from_date': 0}
     try:
         homework_statuses = requests.get(
             url=URL,
@@ -40,9 +42,6 @@ def get_homework_statuses(current_timestamp):
         return homework_statuses.json()
     except Exception as e:
         print(f'Ошибка у бота {e}')
-        # Вот здесь лучше возвращать пустой словарь
-        # Не забывай, что функция возвращает None, если не указать возвращаемое значение явно
-        # Это должно убрать часть ошибок, типа TypeError
 
 
 def send_message(message, bot_client):
