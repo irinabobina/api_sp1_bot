@@ -54,12 +54,8 @@ def main():
         try:
             new_homework = get_homework_statuses(current_timestamp)
             if new_homework.get('homeworks'):
-                send_message(
-                    parse_homework_status(new_homework.get('homeworks')[0]), bot
-                    )
-            current_timestamp = new_homework.get(
-                'current_date', current_timestamp
-                )
+                send_message(parse_homework_status(new_homework.get('homeworks')[0]), bot)
+            current_timestamp = new_homework.get('current_date', current_timestamp)
             time.sleep(300)
 
         except Exception as e:
