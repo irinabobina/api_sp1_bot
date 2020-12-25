@@ -1,8 +1,6 @@
 import os
 import time
 import requests
-
-import requests
 import telegram
 import logging
 from dotenv import load_dotenv
@@ -14,6 +12,7 @@ PRAKTIKUM_TOKEN = os.getenv('PRAKTIKUM_TOKEN')
 TELEGRAM_TOKEN = os.getenv('TELEGRAM_TOKEN')
 CHAT_ID = os.getenv('TELEGRAM_CHAT_ID')
 URL = 'https://praktikum.yandex.ru/api/user_api/homework_statuses/'
+
 
 def parse_homework_status(homework):
     homework_name = homework.get('homework_name')
@@ -50,14 +49,18 @@ def send_message(message, bot_client):
 
 def main():
     bot = telegram.Bot(token=TELEGRAM_TOKEN)
-    current_timestamp = int(time.time())  
+    current_timestamp = int(time.time())
     while True:
         try:
             new_homework = get_homework_statuses(current_timestamp)
             if new_homework.get('homeworks'):
-                send_message(parse_homework_status(new_homework.get('homeworks')[0]), bot)
-            current_timestamp = new_homework.get('current_date', current_timestamp) 
-            time.sleep(300)  
+                send_message(
+                    parse_homework_status(new_homework.get('homeworks')[0]), bot
+                    )
+            current_timestamp = new_homework.get(
+                'current_date', current_timestamp
+                )
+            time.sleep(300)
 
         except Exception as e:
             print(f'Ошибка у бота: {e}')
